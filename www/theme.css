@@ -1,0 +1,15 @@
+
+/* Background color, text color and line height */
+body {
+  background-color: #f9f9f9;
+  color: #333333;
+}
+
+/* */
+pre {
+  background-color:  #ffffff;
+  border-color: #f1f1f1;
+  border-radius: 0;
+  margin: 0.2em 0.1em;
+  margin-bottom: 20px;
+}
