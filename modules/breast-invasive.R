@@ -7,6 +7,19 @@ pool <- dbPool(RSQLite::SQLite(), dbname = "report.sqlite")
 breastInvasiveInput <- function(id, label = "BreastInvasive") {
   ns <- NS(id)
   tagList(
+    textInput(ns("ID"), label = "Surgical ID"),
+    radioButtons(ns("side"),
+                 label = h5("Side"), 
+                 choices = list("Rt" = "right",
+                                "Lt" = "left"),
+                 selected = "right",
+                 inline = TRUE),
+    radioButtons(ns("surgery"),
+                 label = h5("Surgery type"), 
+                 choices = list("Wide exision" = "wide excision",
+                                "SSM" = "skin sparing mastectomy"),
+                 selected = "wide excision",
+                 inline = TRUE),
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
                  choices = list("IDC" = "Invasive ductal carcinoma",
@@ -33,7 +46,7 @@ breastInvasiveInput <- function(id, label = "BreastInvasive") {
 breastInvasive <- function(input, output, session, pool) {
   pool <- dbPool(RSQLite::SQLite(), dbname = "report.sqlite")
   output$out <- renderText({
-    start <- glue('Breast, right, wide excision')
+    start <- glue('Breast, {input$side}, {input$surgery}')
     
     s22 <- "   "
     diagnosis <- glue('{s22}{input$histology}
@@ -45,7 +58,7 @@ breastInvasive <- function(input, output, session, pool) {
   text
   
   observeEvent(input$submit, {
-    entryValues <- data.frame(histology = input$histology, LN = input$LN, size_l = input$size_l)
+    entryValues <- data.frame(ID = input$ID, histology = input$histology, LN = input$LN, size_l = input$size_l)
     db_insert_into(pool, "Breast,Invasive", entryValues)
   })
 }

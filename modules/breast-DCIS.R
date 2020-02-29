@@ -4,6 +4,7 @@ library(glue)
 breastDCISInput <- function(id, label = "BreastDCIS") {
   ns <- NS(id)
   tagList(
+    textInput(ns("ID"), label = "Surgical ID"), 
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
                  choices = list("DCIS" = "Ductal carcinoma in situ, NOS",
@@ -33,7 +34,9 @@ breastDCIS <- function(input, output, session) {
   text
   
   observeEvent(input$submit, {
-    entryValues <- data.frame(histology = input$histology, size_l = input$size_l)
+    entryValues <- data.frame(ID = input$ID,
+                              histology = input$histology,
+                              size_l = input$size_l)
     db_insert_into(pool, "Breast,DCIS", entryValues)
   })
 }
