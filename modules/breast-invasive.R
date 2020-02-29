@@ -43,14 +43,3 @@ breastInvasive <- function(input, output, session) {
   })
   text
 }
-
-ui <- fluidPage(
-  breastInvasiveInput("Breast Invasive", "Breast Invasive"),
-)
-
-
-server <- function(input, output, session) {
-  callModule(breastInvasive, "Breast Invasive")
-}
-
-shinyApp(ui, server)
