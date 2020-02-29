@@ -1,16 +1,13 @@
 library(shiny)
 library(glue)
 
-histology_choices <- list("Ductal carcinoma in situ, NOS",
-                          "Ductal carcinoma in situ, apocrine variant")
-
 breastDCISInput <- function(id, label = "BreastDCIS") {
   ns <- NS(id)
   tagList(
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
-                 choiceNames = histology_choices,
-                 choiceValues = histology_choices,
+                 choices = list("DCIS" = "Ductal carcinoma in situ, NOS",
+                                "Aocrine" = "Ductal carcinoma in situ, apocrine variant"),
                  selected = "Ductal carcinoma in situ, NOS",
                  inline = TRUE),
     numericInput(ns("size_l"), 
@@ -18,7 +15,8 @@ breastDCISInput <- function(id, label = "BreastDCIS") {
                  2.0, 
                  step = 0.1,
                  width = '100px'),
-    verbatimTextOutput(ns("out"))
+    verbatimTextOutput(ns("out")),
+    actionButton(ns("submit")," submit")
   )
 }
 
@@ -33,4 +31,9 @@ breastDCIS <- function(input, output, session) {
     glue('{start}\n {diagnosis}\n\n {micro}')
   })
   text
+  
+  observeEvent(input$submit, {
+    entryValues <- data.frame(histology = input$histology, size_l = input$size_l)
+    db_insert_into(pool, "Breast,DCIS", entryValues)
+  })
 }

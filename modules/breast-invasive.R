@@ -47,6 +47,5 @@ breastInvasive <- function(input, output, session, pool) {
   observeEvent(input$submit, {
     entryValues <- data.frame(histology = input$histology, LN = input$LN, size_l = input$size_l)
     db_insert_into(pool, "Breast,Invasive", entryValues)
-    #goHome()
   })
 }
