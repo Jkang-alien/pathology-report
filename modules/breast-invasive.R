@@ -1,9 +1,6 @@
 library(shiny)
 library(glue)
 
-histology_choices <- list("Invasive ductal carcinoma",
-                          "Invasive lobular carcinoam",
-                          "Mucinous carcinoma")
 LN_Choices <- list("Negative for malignancy",
                    "Metastasis")
 
@@ -12,7 +9,9 @@ breastInvasiveInput <- function(id, label = "BreastInvasive") {
   tagList(
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
-                 choiceNames = histology_choices,
+                 choices = list("IDC" = "Invasive ductal carcinoma",
+                                     "ILC" = "Invasive lobular carcinoam",
+                                     "Mucinous" = "Mucinous carcinoma"),
                  choiceValues = histology_choices,
                  selected = "Invasive ductal carcinoma",
                  inline = TRUE),
