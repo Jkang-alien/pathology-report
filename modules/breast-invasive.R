@@ -1,8 +1,8 @@
 library(shiny)
+library(pool)
 library(glue)
 
-LN_Choices <- list("Negative for malignancy",
-                   "Metastasis")
+pool <- dbPool(RSQLite::SQLite(), dbname = "report.sqlite")
 
 breastInvasiveInput <- function(id, label = "BreastInvasive") {
   ns <- NS(id)
@@ -25,11 +25,13 @@ breastInvasiveInput <- function(id, label = "BreastInvasive") {
                  2.0, 
                  step = 0.1,
                  width = '100px'),
-    verbatimTextOutput(ns("out"))
+    verbatimTextOutput(ns("out")),
+    actionButton(ns("submit")," submit")
         )
 }
 
-breastInvasive <- function(input, output, session) {
+breastInvasive <- function(input, output, session, pool) {
+  pool <- dbPool(RSQLite::SQLite(), dbname = "report.sqlite")
   output$out <- renderText({
     start <- glue('Breast, right, wide excision')
     
@@ -41,4 +43,10 @@ breastInvasive <- function(input, output, session) {
     glue('{start}\n {diagnosis}\n\n {micro}')
   })
   text
+  
+  observeEvent(input$submit, {
+    entryValues <- data.frame(histology = input$histology, LN = input$LN, size_l = input$size_l)
+    db_insert_into(pool, "Breast,Invasive", entryValues)
+    #goHome()
+  })
 }
