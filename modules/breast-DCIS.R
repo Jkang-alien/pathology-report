@@ -20,7 +20,7 @@ breastDCISInput <- function(id, label = "BreastDCIS") {
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
                  choices = list("DCIS" = "Ductal carcinoma in situ, NOS",
-                                "Aocrine" = "Ductal carcinoma in situ, apocrine variant"),
+                                "Apocrine" = "Ductal carcinoma in situ, apocrine variant"),
                  selected = "Ductal carcinoma in situ, NOS",
                  inline = TRUE),
     numericInput(ns("size_l"), 
