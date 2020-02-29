@@ -5,6 +5,18 @@ breastDCISInput <- function(id, label = "BreastDCIS") {
   ns <- NS(id)
   tagList(
     textInput(ns("ID"), label = "Surgical ID"), 
+    radioButtons(ns("side"),
+                 label = h5("Side"), 
+                 choices = list("Rt" = "right",
+                                "Lt" = "left"),
+                 selected = "right",
+                 inline = TRUE),
+    radioButtons(ns("surgery"),
+                 label = h5("Surgery type"), 
+                 choices = list("Wide exision" = "wide excision",
+                                "SSM" = "skin sparing mastectomy"),
+                 selected = "wide excision",
+                 inline = TRUE),
     radioButtons(ns("histology"),
                  label = h5("Histology"), 
                  choices = list("DCIS" = "Ductal carcinoma in situ, NOS",
@@ -23,7 +35,7 @@ breastDCISInput <- function(id, label = "BreastDCIS") {
 
 breastDCIS <- function(input, output, session) {
   output$out <- renderText({
-    start <- glue('Breast, right, wide excision')
+    start <- glue('Breast,  {input$side}, {input$surgery}')
     
     s22 <- "   "
     diagnosis <- glue('{s22}{input$histology}')
@@ -35,6 +47,8 @@ breastDCIS <- function(input, output, session) {
   
   observeEvent(input$submit, {
     entryValues <- data.frame(ID = input$ID,
+                              side = input$side,
+                              surgery = input$surgery,
                               histology = input$histology,
                               size_l = input$size_l)
     db_insert_into(pool, "Breast,DCIS", entryValues)
