@@ -9,7 +9,8 @@ breastInvasiveInput <- function(id, label = "BreastInvasive") {
   tagList(
     textInput(ns("ID"), label = "Surgical ID",
               value = "S20-000000"),
-    actionButton('id', "Find ID"),
+    actionButton('id_to_edit', "Find ID"),
+    
     fluidRow(
       tabBox(title = "Gross",
         tabPanel("Tumor",
@@ -65,9 +66,10 @@ breastInvasiveInput <- function(id, label = "BreastInvasive") {
 
     fluidRow(
       box(title = "Report", status = "primary",
-          verbatimTextOutput(ns("out"))))
+          verbatimTextOutput(ns("out")))),
+    
+    actionButton(ns("submit"), "Submit")
     )
-        
 }
 
 breastInvasive <- function(input, output, session, pool) {
@@ -82,15 +84,7 @@ breastInvasive <- function(input, output, session, pool) {
                   {s22}Largest tumor size:{input$size_l}cm')
     glue('{start}\n {diagnosis}\n\n {micro}')
   })
-  text
-  
-  observeEvent(input$id, {
-    # surgical_id <- input$id
-    entryValues <- data.frame(ID = input$id)
-    db_insert_into(pool, "Breast,Invasive", entryValues)
-  })
 
-  
   observeEvent(input$submit, {
     entryValues <- data.frame(ID = input$ID,
                               side = input$side,
